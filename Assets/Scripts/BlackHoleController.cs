@@ -55,17 +55,20 @@ public class BlackHoleController : MonoBehaviour
         //Motion Handler. Only moves on axis X,Z
         float translationHorizontal = -Input.GetAxis("Player" + playerNum + "Horizontal") * maxSpeed * Time.deltaTime; //Z
         float translationVertical = Input.GetAxis("Player" + playerNum + "Vertical") * maxSpeed * Time.deltaTime; //X
-        
-        
 
+        //Adjust direction
+        float rotateAngle = 3.14159f*0.31f;
+        float tempHori =  translationHorizontal * Mathf.Cos(rotateAngle) + translationVertical* Mathf.Sin(rotateAngle);
+        float tempVerti = -translationHorizontal * Mathf.Sin(rotateAngle) + translationVertical * Mathf.Cos(rotateAngle);
 
-        //speed filter
-        //if (Mathf.Abs(translationHorizontal) < controlFilter && Mathf.Abs(translationVertical) < controlFilter)
+        translationHorizontal = tempHori;
+        translationVertical = tempVerti;
+       //speed filter
+       //if (Mathf.Abs(translationHorizontal) < controlFilter && Mathf.Abs(translationVertical) < controlFilter)
 
         Vector3 posDelta = new Vector3(translationVertical, 0f, translationHorizontal);
-        //Adjust direction
-        posDelta = RotateRound(posDelta, new Vector3(0f, 0f, 0f), new Vector3(0f, 1f, 0f), 45f);
-        Debug.Log(posDelta);
+
+
         Vector3 pos = this.transform.position;
         Vector3 posDestination = pos + posDelta;
 
@@ -194,11 +197,5 @@ public class BlackHoleController : MonoBehaviour
 
         Gizmos.color = Color.red;
         Gizmos.DrawWireSphere(transform.position, gravityRadius);
-    }
-    public static Vector3 RotateRound(Vector3 position, Vector3 center, Vector3 axis, float angle)
-    {
-        Vector3 point = Quaternion.AngleAxis(angle, axis) * (position - center);
-        Vector3 resultVec3 = center + point;
-        return resultVec3;
     }
 }
